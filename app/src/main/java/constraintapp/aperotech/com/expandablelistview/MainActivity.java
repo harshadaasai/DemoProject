@@ -38,12 +38,15 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<ArrayList<Model>> childData;
     HashMap<String, ArrayList<Model>> expandableListDetail;
     Context context;
+    MyGlobals myGlobals;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = this;
+        myGlobals = new MyGlobals(this);
+        myGlobals.showPDialog("Loading");
         groupData = new ArrayList<>();
         childData = new ArrayList<>();
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
                             expandableListAdapter = new CustomExpandableListAdapter(context, groupData, childData, expandableListView);
                             expandableListView.setAdapter(expandableListAdapter);
-
+                            myGlobals.hPDialog();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
