@@ -1,9 +1,15 @@
 package constraintapp.aperotech.com.expandablelistview;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
@@ -30,17 +36,16 @@ public class MainActivity extends AppCompatActivity {
     ExpandableListAdapter expandableListAdapter;
     ArrayList<Model> groupData;
     ArrayList<ArrayList<Model>> childData;
-
-    List<Model> expandableListTitle;
     HashMap<String, ArrayList<Model>> expandableListDetail;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = this;
         groupData = new ArrayList<>();
         childData = new ArrayList<>();
-//        expandableListDetail = new HashMap<>();
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         getData();
 
@@ -48,9 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onGroupExpand(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        groupData.get(groupPosition) + " List Expanded.",
-                        Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -58,9 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onGroupCollapse(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        groupData.get(groupPosition) + " List Collapsed.",
-                        Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -69,17 +69,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
-                Toast.makeText(
-                        getApplicationContext(),
-                        groupData.get(groupPosition)
-                                + " -> "
-                                +(
-                                childData.get(groupPosition)).get(
-                                childPosition), Toast.LENGTH_SHORT
-                ).show();
                 return false;
             }
         });
+
+
     }
 
     public  void getData()
@@ -105,9 +99,8 @@ public class MainActivity extends AppCompatActivity {
                                 groupData.add(model);
                                 childData.add(getAnswers());
                             }
-                            Log.e("groupdata "," "+groupData.size());
-                            Log.e("childdata "," "+childData.size());
-                            expandableListAdapter = new CustomExpandableListAdapter(getApplicationContext(), groupData, childData);
+
+                            expandableListAdapter = new CustomExpandableListAdapter(context, groupData, childData, expandableListView);
                             expandableListView.setAdapter(expandableListAdapter);
 
 
@@ -161,11 +154,7 @@ public class MainActivity extends AppCompatActivity {
                             {
                                 Model model = gson.fromJson(res.get(i).toString(), Model.class);
                                 child.add(model);
-                                Log.e("child "," "+child.size());
                             }
-
-
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
